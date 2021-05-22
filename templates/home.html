@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Twitter Detector</title>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1" name="viewport ">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+
+        $(document).ready(function() {
+            //var data = "passed here";
+            $( "#ajax_btn" ).click(function() {
+                var title = $("#title-text").val()
+                var msg = $("#message-text").val()
+
+                $.ajax({
+                type: "POST",
+                url: "/ajaxcall",
+                traditional:true,
+                data: {title:title,msg:msg},
+                dataType: 'json',
+                success: function(data){
+                    //console.log(data["res"])
+                    $("#title-text").val(title)
+                    $("#message-text").val(msg)
+                    if (data["res"] == "This is Real!") {
+                        $("#show_result").html(data["res"])
+                        $("#show_result").css('color', 'green')
+                        $("#show_result").css('font-size', '30pt')
+                    }else if(data["res"] == "This is Fake!") {
+                        $("#show_result").html(data["res"])
+                        $("#show_result").css('color', 'red')
+                        $("#show_result").css('font-size', '30pt')
+                    }
+                }
+                });
+            });
+            $("#reset").click(function(){
+                 $("#title-text").val("")
+                 $("#message-text").val("")
+             })
+        });
+
+    </script>
+</head>
+<body>
+<form action="/" enctype=multipart/form-data id="submit" method="POST">
+    <div class="jumbotron text-center" style="background-color: #231161; color: #C99700;">
+        <h1 style="font-size: 30pt; font-weight: bold;">Fake news detector</h1>
+    </div>
+
+    <div class="container">
+        <div class="row-3 ">
+            <div class="col">
+                <div class="form-group">
+                    <label class="col-form-label" for="title-text", style="font-size: 16pt; font-weight: bold;">Title:</label>
+                    <input class="form-control" id="title-text" name="title-text" placeholder="Title here" type="text"
+                           required>
+                </div>
+                <div class="form-group">
+                    <label class="col-form-label" for="message-text" style="font-size: 16pt; font-weight: bold;"> Message:</label>
+                    <textarea class="form-control" id="message-text" name="message-text"
+                              placeholder="Type your message here..." required rows="7" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="inputState" style="font-size: 16pt; font-weight: bold;">Model</label>
+                    <select id="inputState" class="form-control">
+                        <option selected>Choose...</option>
+                        <option>Bert 1</option>
+                    </select>
+                </div>
+                <label class="col-form-label" for="title-text" style="font-size: 16pt; font-weight: bold;">Result:</label>
+                <p id="show_result"></p>
+                <!--                <div>-->
+                <!--                    {% if answer == 0 %}-->
+                <!--                    <h1 class="text-danger" style="font-family: Righteous">-->
+                <!--                        This is Fake News!-->
+                <!--                    </h1>-->
+                <!--                    {% elif answer == 1 %}-->
+                <!--                    <h1 class="text-success" style="font-family: Righteous">-->
+                <!--                        This is true News!-->
+                <!--                    </h1>-->
+                <!--                    {% else %}-->
+                <!--                    <h1 style="font-family: Righteous">-->
+                <!--                        -->
+                <!--                    </h1>-->
+                <!--                    {% endif %}-->
+                <!--                </div>-->
+            </div>
+        </div>
+    </div>
+
+    <br>
+</form>
+<div class="text-center">
+    <!--        <button class="btn btn-primary" onclick="upload" type="submit">Submit</button>-->
+    <!--        <button class="btn btn-danger" type="reset" onclick="/">Reset</button>-->
+    <button class="btn btn-primary" id="ajax_btn">Submit</button>
+    <button class="btn btn-danger" id="reset" type="reset" >Reset</button>
+</div>
+</body>
+</html>
+
